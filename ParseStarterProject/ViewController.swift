@@ -12,6 +12,8 @@ import Parse
 
 class ViewController: UIViewController {
     
+    var signupMode = true
+    
     @IBOutlet weak var emailTextField: UITextField!
     
     @IBOutlet weak var passwordTextField: UITextField!
@@ -20,10 +22,28 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var messageLabel: UILabel!
     
+    @IBOutlet weak var signupOrLoginButton: UIButton!
+    
     @IBAction func signupOrLogin(_ sender: Any) {
     }
     
     @IBAction func changeSignupMode(_ sender: Any) {
+        if signupMode {
+            //Change layout to login
+            
+            signupOrLoginButton.setTitle("Log In", for: [])
+            messageLabel.text = "Don't have an account?"
+            changeSignupModeButton.setTitle("Sign Up", for: [])
+            
+            
+            
+            
+        } else {
+            signupOrLoginButton.setTitle("Sign Up", for: [])
+            messageLabel.text = "Already have an account?"
+            changeSignupModeButton.setTitle("Log In", for: [])
+        }
+        signupMode = !signupMode
     }
     
     
