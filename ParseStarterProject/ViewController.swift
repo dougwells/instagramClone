@@ -25,6 +25,22 @@ class ViewController: UIViewController {
     @IBOutlet weak var signupOrLoginButton: UIButton!
     
     @IBAction func signupOrLogin(_ sender: Any) {
+        if emailTextField.text == "" || passwordTextField.text == "" {
+            
+            //creat alert
+            let alert = UIAlertController(title: "Login Error", message: "Please enter both email and password", preferredStyle: UIAlertControllerStyle.alert)
+            
+            //add button to alert
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                self.dismiss(animated: true, completion: nil)
+            }))
+            
+            //present alert
+            self.present(alert, animated: true, completion: nil)
+            
+        } else {
+            
+        }
     }
     
     @IBAction func changeSignupMode(_ sender: Any) {
