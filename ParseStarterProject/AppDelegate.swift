@@ -46,7 +46,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Uncomment the line inside ParseStartProject-Bridging-Header and the following line here:
         // PFFacebookUtils.initializeFacebook()
         // ****************************************************************************
-
+        
+        //Comment out this line if get error "cannot update user"
         PFUser.enableAutomaticUser()
 
         let defaultACL = PFACL();

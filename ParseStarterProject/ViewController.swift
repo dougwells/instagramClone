@@ -27,22 +27,47 @@ class ViewController: UIViewController {
     @IBAction func signupOrLogin(_ sender: Any) {
         if emailTextField.text == "" || passwordTextField.text == "" {
             
-            //creat alert
-            let alert = UIAlertController(title: "Login Error", message: "Please enter both email and password", preferredStyle: UIAlertControllerStyle.alert)
-            
-            //add button to alert
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
-                self.dismiss(animated: true, completion: nil)
-            }))
-            
-            //present alert
-            self.present(alert, animated: true, completion: nil)
+            createAlert(title: "Error in form", message: "Please enter both email and password")
             
         } else {
             
+            if signupMode {
+                // Save user in Parse
+                let user = PFUser()
+                user.username = emailTextField.text
+                user.email = emailTextField.text
+                user.password = passwordTextField.text
+                user.signUpInBackground { (success, error) -> Void in
+                    if success {
+                        print("New user \(user.email) saved")
+                    } else {
+                        if error != nil {
+                            print("Error saving user", error)
+                            var displayErrorMessage = "Please try again later ..."
+                            if let errorMessage = error?.UserInfo["error"] as? String {
+                                displayErrorMessage = errorMessage
+                            }
+                            self.createAlert(title: "Signup Error", message: displayErrorMessage)
+                        }
+                    }
+                }
+            }
         }
     }
     
+    func createAlert(title: String, message: String ) {
+        //creat alert
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        
+        //add button to alert
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+            self.dismiss(animated: true, completion: nil)
+        }))
+        
+        //present alert
+        self.present(alert, animated: true, completion: nil)
+    }
+ 
     @IBAction func changeSignupMode(_ sender: Any) {
         if signupMode {
             //Change layout to login
