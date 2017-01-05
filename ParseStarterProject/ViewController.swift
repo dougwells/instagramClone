@@ -11,6 +11,23 @@ import UIKit
 import Parse
 
 class ViewController: UIViewController {
+    
+    @IBOutlet weak var emailTextField: UITextField!
+    
+    @IBOutlet weak var passwordTextField: UITextField!
+    
+    @IBOutlet weak var changeSignupModeButton: UIButton!
+    
+    @IBOutlet weak var messageLabel: UILabel!
+    
+    @IBAction func signupOrLogin(_ sender: Any) {
+    }
+    
+    @IBAction func changeSignupMode(_ sender: Any) {
+    }
+    
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
