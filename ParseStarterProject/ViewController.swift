@@ -44,8 +44,8 @@ class ViewController: UIViewController {
                         if error != nil {
                             print("Error saving user", error)
                             var displayErrorMessage = "Please try again later ..."
-                            if let errorMessage = error?.UserInfo["error"] as? String {
-                                displayErrorMessage = errorMessage
+                            if let errorMessage = error as NSError? {
+                                displayErrorMessage = errorMessage.userInfo["error"] as! String
                             }
                             self.createAlert(title: "Signup Error", message: displayErrorMessage)
                         }
