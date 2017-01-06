@@ -24,13 +24,32 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var signupOrLoginButton: UIButton!
     
+    let activityIndicator = UIActivityIndicatorView.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+    
+    func startSpinner(){
+        
+
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        
+    }
+    
+    func stopSpinner(){
+        activityIndicator.stopAnimating()
+        UIApplication.shared.endIgnoringInteractionEvents()
+    }
+    
     @IBAction func signupOrLogin(_ sender: Any) {
         if emailTextField.text == "" || passwordTextField.text == "" {
             
             createAlert(title: "Error in form", message: "Please enter both email and password")
             
         } else {
-            
+            startSpinner()
             if signupMode {
                 // Save user in Parse
                 let user = PFUser()
@@ -38,6 +57,7 @@ class ViewController: UIViewController {
                 user.email = emailTextField.text
                 user.password = passwordTextField.text
                 user.signUpInBackground { (success, error) -> Void in
+                    self.stopSpinner()
                     if success {
                         print("New user \(user.email) saved")
                     } else {
@@ -51,7 +71,24 @@ class ViewController: UIViewController {
                         }
                     }
                 }
+            } else {    //Login mode
+                PFUser.logInWithUsername(inBackground: emailTextField.text!, password: passwordTextField.text!, block: { (user, error) in
+                    self.stopSpinner()
+                    if (user != nil) {
+                        print("Existing user logged in", user)
+                        self.createAlert(title: "Successful", message: "Welcome to Instagram!")
+                    }
+                    if error != nil {
+                        print("Error logging in existing user", error)
+                        var displayErrorMessage = "Please try again later ..."
+                        if let errorMessage = error as NSError? {
+                            displayErrorMessage = errorMessage.userInfo["error"] as! String
+                        }
+                        self.createAlert(title: "Login Error", message: displayErrorMessage)
+                    }
+                })
             }
+            
         }
     }
     
