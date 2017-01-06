@@ -126,7 +126,11 @@ class ViewController: UIViewController {
         signupMode = !signupMode
     }
     
-    
+    override func viewDidAppear(_ animated: Bool) {
+        if PFUser.current() != nil {
+            performSegue(withIdentifier: "showUserTable", sender: self)
+        }
+    }
     
 
     override func viewDidLoad() {
