@@ -60,6 +60,7 @@ class ViewController: UIViewController {
                     self.stopSpinner()
                     if success {
                         print("New user \(user.email) saved")
+                        self.performSegue(withIdentifier: "showUserTable", sender: self)
                     } else {
                         if error != nil {
                             print("Error saving user", error)
@@ -76,7 +77,8 @@ class ViewController: UIViewController {
                     self.stopSpinner()
                     if (user != nil) {
                         print("Existing user logged in", user)
-                        self.createAlert(title: "Successful", message: "Welcome to Instagram!")
+                        self.performSegue(withIdentifier: "showUserTable", sender: self)
+                        //self.createAlert(title: "Successful", message: "Welcome to Instagram!")
                     }
                     if error != nil {
                         print("Error logging in existing user", error)
