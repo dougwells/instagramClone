@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // ****************************************************************************
         
         //Comment out this line if get error "cannot update user"
-        PFUser.enableAutomaticUser()
+            //PFUser.enableAutomaticUser()
 
         let defaultACL = PFACL();
 

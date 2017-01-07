@@ -120,7 +120,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-79.200000000000003" y="126.38680659670166"/>
+            <point key="canvasLocation" x="1058" y="818"/>
         </scene>
         <!--Root View Controller-->
         <scene sceneID="dz1-KP-bEV">
@@ -145,7 +145,16 @@
                             <outlet property="delegate" destination="1H4-Wd-h3G" id="M8R-mQ-7vk"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="Yb1-au-Hat"/>
+                    <navigationItem key="navigationItem" title="Root View Controller" id="Yb1-au-Hat">
+                        <barButtonItem key="rightBarButtonItem" title="Logout" id="8Z2-St-cOm">
+                            <connections>
+                                <action selector="logout:" destination="1H4-Wd-h3G" id="bgM-ut-yfd"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="logoutSegue" id="nTA-no-iS1"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sev-zx-1h0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
