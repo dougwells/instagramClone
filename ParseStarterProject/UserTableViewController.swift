@@ -12,6 +12,7 @@ import Parse
 class UserTableViewController: UITableViewController {
     
     var usernames = ["test"]
+    var userIDs = ["1234"]
 
     @IBAction func logout(_ sender: Any) {
         PFUser.logOutInBackground { (error) in
@@ -43,14 +44,18 @@ class UserTableViewController: UITableViewController {
                 print("Error getting users", error)
                 
             } else if let users = objects {
+                
                 self.usernames.removeAll()
+                self.userIDs.removeAll()
                 
                 for object in users {
                     
                     if let user = object as? PFUser {
                         
                         let usernameArr = user.username!.components(separatedBy: "@")
+                        
                         self.usernames.append(usernameArr[0])
+                        self.userIDs.append(user.objectId!)
                     
                     }
                 }
