@@ -92,6 +92,22 @@ class UserTableViewController: UITableViewController {
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let cell = tableView.cellForRow(at: indexPath)
+        
+        //create nice checkmark next to members that user wants to follow
+        cell?.accessoryType = UITableViewCellAccessoryType.checkmark
+        
+        let following = PFObject(className: "Followers")
+        following["follower"] = PFUser.current()?.objectId
+        following["following"] = userIDs[indexPath.row]
+        isFollowing = ["" : true]
+        
+        following.saveInBackground()
+
+    }
+    
 
     /*
     // Override to support conditional editing of the table view.
