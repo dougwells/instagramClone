@@ -77,8 +77,8 @@ class ViewController: UIViewController {
                     self.stopSpinner()
                     if (user != nil) {
                         print("Existing user logged in", user)
-                        self.performSegue(withIdentifier: "showUserTable", sender: self)
-                        //self.createAlert(title: "Successful", message: "Welcome to Instagram!")
+                    self.performSegue(withIdentifier: "showUserTable", sender: self)
+                    //  self.createAlert(title: "Successful", message: "Welcome to Instagram!")
                     }
                     if error != nil {
                         print("Error logging in existing user", error)
@@ -130,12 +130,15 @@ class ViewController: UIViewController {
         if PFUser.current() != nil {
             performSegue(withIdentifier: "showUserTable", sender: self)
         }
+        
+        self.navigationController?.navigationBar.isHidden = true
+        
     }
     
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+
         
        
     }
