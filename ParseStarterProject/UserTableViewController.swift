@@ -11,7 +11,7 @@ import Parse
 
 class UserTableViewController: UITableViewController {
     
-    var usernames = [""]
+    var usernames = ["test"]
 
     @IBAction func logout(_ sender: Any) {
         PFUser.logOutInBackground { (error) in
@@ -43,21 +43,21 @@ class UserTableViewController: UITableViewController {
                 print("Error getting users", error)
                 
             } else if let users = objects {
+                self.usernames.removeAll()
                 
                 for object in users {
                     
                     if let user = object as? PFUser {
-                        self.usernames.append(user.username!)
-                        print("prep to display user \(user.username)")
-                        print("username array = ", self.usernames)
-                    }
+                        
+                        let usernameArr = user.username!.components(separatedBy: "@")
+                        self.usernames.append(usernameArr[0])
                     
+                    }
                 }
-                
             }
-            
+            self.tableView.reloadData()
         })
-        self.tableView.reloadData()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -74,8 +74,7 @@ class UserTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        print("# of rows = ", usernames.count)
-        return 1
+        return usernames.count
     }
 
     
