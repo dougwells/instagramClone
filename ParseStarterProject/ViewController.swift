@@ -60,7 +60,7 @@ class ViewController: UIViewController {
                     self.stopSpinner()
                     if success {
                         print("New user \(user.email) saved")
-                        self.performSegue(withIdentifier: "showUserTable", sender: self)
+                        //self.performSegue(withIdentifier: "showUserTable", sender: self)
                     } else {
                         if error != nil {
                             print("Error saving user", error)

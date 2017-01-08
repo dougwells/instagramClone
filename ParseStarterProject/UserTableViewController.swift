@@ -10,6 +10,8 @@ import UIKit
 import Parse
 
 class UserTableViewController: UITableViewController {
+    
+    var usernames = [""]
 
     @IBAction func logout(_ sender: Any) {
         PFUser.logOutInBackground { (error) in
@@ -31,6 +33,31 @@ class UserTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        let query = PFUser.query()
+        
+        query?.findObjectsInBackground(block: { (objects, error) in
+            
+            if error != nil {
+                
+                print("Error getting users", error)
+                
+            } else if let users = objects {
+                
+                for object in users {
+                    
+                    if let user = object as? PFUser {
+                        self.usernames.append(user.username!)
+                        print("prep to display user \(user.username)")
+                        print("username array = ", self.usernames)
+                    }
+                    
+                }
+                
+            }
+            
+        })
+        self.tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -47,7 +74,8 @@ class UserTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 4
+        print("# of rows = ", usernames.count)
+        return 1
     }
 
     
@@ -55,7 +83,7 @@ class UserTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
         // Configure the cell...
-        cell.textLabel?.text = "Test"
+        cell.textLabel?.text = usernames[indexPath.row]
 
         return cell
     }
