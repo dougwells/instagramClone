@@ -74,6 +74,7 @@ class UserTableViewController: UITableViewController {
                             if let objects = objects {
                                 if objects.count > 0 {
                                     self.isFollowing[user.objectId!] = true
+                                    print(objects.count)
                                 } else {
                                     self.isFollowing[user.objectId!] = false
                                 }
@@ -117,7 +118,6 @@ class UserTableViewController: UITableViewController {
         // Configure the cell...
         cell.textLabel?.text = usernames[indexPath.row]
         print("cell for row at running. UserID =", userIDs[indexPath.row])
-        print("isFollowing= \(isFollowing[userIDs[indexPath.row]]!)")
         
         if isFollowing[userIDs[indexPath.row]]! {
             cell.accessoryType = UITableViewCellAccessoryType.checkmark
@@ -131,14 +131,41 @@ class UserTableViewController: UITableViewController {
         
         let cell = tableView.cellForRow(at: indexPath)
         
-        //create nice checkmark next to members that user wants to follow
-        cell?.accessoryType = UITableViewCellAccessoryType.checkmark
         
-        //write & save to Parse DB
-        let followersDB = PFObject(className: "Followers")
-        followersDB["follower"] = PFUser.current()?.objectId
-        followersDB["following"] = userIDs[indexPath.row]
-        followersDB.saveInBackground()
+        
+        //if following new user, add checkmark & save to "Followers" in Parse
+        if !isFollowing[userIDs[indexPath.row]]! {
+            cell?.accessoryType = UITableViewCellAccessoryType.checkmark
+            isFollowing[userIDs[indexPath.row]] = true
+            let followersDB = PFObject(className: "Followers")
+            followersDB["follower"] = PFUser.current()?.objectId
+            followersDB["following"] = userIDs[indexPath.row]
+            print("saving new follower \(userIDs[indexPath.row])")
+            followersDB.saveInBackground()
+            
+        } else {
+            
+            //if unfollowing user, remove checkmark and delete from Followers in Parse
+            cell?.accessoryType = UITableViewCellAccessoryType.none
+            isFollowing[userIDs[indexPath.row]] = false
+            let query = PFQuery(className: "Followers")
+            query.whereKey("follower", equalTo: PFUser.current()?.objectId!)
+            query.whereKey("following", equalTo: userIDs[indexPath.row])
+            
+            query.findObjectsInBackground(block: { (objects, error) in
+
+                if let objects = objects {
+                    
+                    for object in objects {
+                        object.deleteInBackground()
+                    }
+                }
+            })
+            
+            
+            //remove this row from Parse Followers
+            
+        }
 
     }
     
