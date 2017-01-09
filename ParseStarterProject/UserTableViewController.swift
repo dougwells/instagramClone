@@ -13,6 +13,7 @@ class UserTableViewController: UITableViewController {
     
     var usernames = ["test"]
     var userIDs = ["1234"]
+    var isFollowing = ["" : false]
 
     @IBAction func logout(_ sender: Any) {
         PFUser.logOutInBackground { (error) in
@@ -35,6 +36,8 @@ class UserTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
+        
+        //query the User Parse DB
         let query = PFUser.query()
         
         query?.findObjectsInBackground(block: { (objects, error) in
@@ -47,7 +50,9 @@ class UserTableViewController: UITableViewController {
                 
                 self.usernames.removeAll()
                 self.userIDs.removeAll()
+                self.isFollowing.removeAll()
                 
+                //build array of all users stored in Parse
                 for object in users {
                     
                     if let user = object as? PFUser {
@@ -56,11 +61,33 @@ class UserTableViewController: UITableViewController {
                         
                         self.usernames.append(usernameArr[0])
                         self.userIDs.append(user.objectId!)
+                     
+                    //Pre-identify if logged in users is following any listed users
+                        let query = PFQuery(className: "Followers")
+                        query.whereKey("follower", contains: PFUser.current()?.objectId)
+                        query.whereKey("following", contains: user.objectId)
+                        
+                        query.findObjectsInBackground(block: { (objects, error) in
+                            
+                            if let objects = objects {
+                                if objects.count > 0 {
+                                    self.isFollowing[user.objectId!] = true
+                                } else {
+                                    self.isFollowing[user.objectId!] = false
+                                }
+                                
+                                if self.isFollowing.count == self.usernames.count {
+                                   self.tableView.reloadData()
+                                }
+                                
+                            }
+                            
+                        })
                     
                     }
                 }
             }
-            self.tableView.reloadData()
+            
         })
         
     }
@@ -88,6 +115,10 @@ class UserTableViewController: UITableViewController {
 
         // Configure the cell...
         cell.textLabel?.text = usernames[indexPath.row]
+        
+        if isFollowing[userIDs[indexPath.row]]! {
+            cell.accessoryType = UITableViewCellAccessoryType.checkmark
+        }
 
         return cell
     }
@@ -99,12 +130,11 @@ class UserTableViewController: UITableViewController {
         //create nice checkmark next to members that user wants to follow
         cell?.accessoryType = UITableViewCellAccessoryType.checkmark
         
-        let following = PFObject(className: "Followers")
-        following["follower"] = PFUser.current()?.objectId
-        following["following"] = userIDs[indexPath.row]
-        isFollowing = ["" : true]
-        
-        following.saveInBackground()
+        //write & save to Parse DB
+        let followersDB = PFObject(className: "Followers")
+        followersDB["follower"] = PFUser.current()?.objectId
+        followersDB["following"] = userIDs[indexPath.row]
+        followersDB.saveInBackground()
 
     }
     
