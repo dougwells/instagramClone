@@ -11,9 +11,9 @@ import Parse
 
 class UserTableViewController: UITableViewController {
     
-    var usernames = ["test"]
+    var usernames = [""]
     var userIDs = ["1234"]
-    var isFollowing = ["" : false]
+    var isFollowing = ["1234" : false]
 
     @IBAction func logout(_ sender: Any) {
         PFUser.logOutInBackground { (error) in
@@ -38,10 +38,11 @@ class UserTableViewController: UITableViewController {
         
         
         //query the User Parse DB
+        print("viewDidLoad")
         let query = PFUser.query()
         
         query?.findObjectsInBackground(block: { (objects, error) in
-            
+            print("findObjectsInBackround returned")
             if error != nil {
                 
                 print("Error getting users", error)
@@ -51,6 +52,7 @@ class UserTableViewController: UITableViewController {
                 self.usernames.removeAll()
                 self.userIDs.removeAll()
                 self.isFollowing.removeAll()
+                print("Arrays start empty")
                 
                 //build array of all users stored in Parse
                 for object in users {
@@ -64,8 +66,8 @@ class UserTableViewController: UITableViewController {
                      
                     //Pre-identify if logged in users is following any listed users
                         let query = PFQuery(className: "Followers")
-                        query.whereKey("follower", contains: PFUser.current()?.objectId)
-                        query.whereKey("following", contains: user.objectId)
+                        query.whereKey("follower", equalTo: PFUser.current()?.objectId!)
+                        query.whereKey("following", equalTo: user.objectId!)
                         
                         query.findObjectsInBackground(block: { (objects, error) in
                             
@@ -105,7 +107,6 @@ class UserTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return usernames.count
     }
 
@@ -115,10 +116,13 @@ class UserTableViewController: UITableViewController {
 
         // Configure the cell...
         cell.textLabel?.text = usernames[indexPath.row]
+        print("cell for row at running. UserID =", userIDs[indexPath.row])
+        print("isFollowing= \(isFollowing[userIDs[indexPath.row]]!)")
         
         if isFollowing[userIDs[indexPath.row]]! {
             cell.accessoryType = UITableViewCellAccessoryType.checkmark
         }
+        
 
         return cell
     }
