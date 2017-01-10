@@ -39,10 +39,11 @@ class UserTableViewController: UITableViewController {
         
         //query the User Parse DB
         print("viewDidLoad")
-        let query = PFUser.query()
+        let query = PFUser.query()  //get all data rows
         
         query?.findObjectsInBackground(block: { (objects, error) in
             print("findObjectsInBackround returned")
+            
             if error != nil {
                 
                 print("Error getting users", error)
@@ -58,11 +59,14 @@ class UserTableViewController: UITableViewController {
                 for object in users {
                     
                     if let user = object as? PFUser {
+                            if user.objectId != PFUser.current()?.objectId {  //No list curr user
                         
-                        let usernameArr = user.username!.components(separatedBy: "@")
+                                let usernameArr = user.username!.components(separatedBy: "@")
                         
-                        self.usernames.append(usernameArr[0])
-                        self.userIDs.append(user.objectId!)
+                                self.usernames.append(usernameArr[0])
+                                self.userIDs.append(user.objectId!)
+                                print("Added \(usernameArr[0]) to array")
+                        
                      
                     //Pre-identify if logged in users is following any listed users
                         let query = PFQuery(className: "Followers")
@@ -74,7 +78,7 @@ class UserTableViewController: UITableViewController {
                             if let objects = objects {
                                 if objects.count > 0 {
                                     self.isFollowing[user.objectId!] = true
-                                    print(objects.count)
+                                    print("current user follows \(user.username!)")
                                 } else {
                                     self.isFollowing[user.objectId!] = false
                                 }
@@ -86,7 +90,7 @@ class UserTableViewController: UITableViewController {
                             }
                             
                         })
-                    
+                        } // End if user.objectId != PFUser.current()....
                     }
                 }
             }
