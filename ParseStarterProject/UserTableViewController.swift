@@ -14,6 +14,8 @@ class UserTableViewController: UITableViewController {
     var usernames = [""]
     var userIDs = ["1234"]
     var isFollowing = ["1234" : false]
+    
+    var refresher: UIRefreshControl!
 
     @IBAction func logout(_ sender: Any) {
         PFUser.logOutInBackground { (error) in
@@ -38,64 +40,14 @@ class UserTableViewController: UITableViewController {
         
         
         //query the User Parse DB
-        print("viewDidLoad")
-        let query = PFUser.query()  //get all data rows
+        refresh()
         
-        query?.findObjectsInBackground(block: { (objects, error) in
-            print("findObjectsInBackround returned")
-            
-            if error != nil {
-                
-                print("Error getting users", error)
-                
-            } else if let users = objects {
-                
-                self.usernames.removeAll()
-                self.userIDs.removeAll()
-                self.isFollowing.removeAll()
-                print("Arrays start empty")
-                
-                //build array of all users stored in Parse
-                for object in users {
-                    
-                    if let user = object as? PFUser {
-                            if user.objectId != PFUser.current()?.objectId {  //No list curr user
-                        
-                                let usernameArr = user.username!.components(separatedBy: "@")
-                        
-                                self.usernames.append(usernameArr[0])
-                                self.userIDs.append(user.objectId!)
-                                print("Added \(usernameArr[0]) to array")
-                        
-                     
-                    //Pre-identify if logged in users is following any listed users
-                        let query = PFQuery(className: "Followers")
-                        query.whereKey("follower", equalTo: PFUser.current()?.objectId!)
-                        query.whereKey("following", equalTo: user.objectId!)
-                        
-                        query.findObjectsInBackground(block: { (objects, error) in
-                            
-                            if let objects = objects {
-                                if objects.count > 0 {
-                                    self.isFollowing[user.objectId!] = true
-                                    print("current user follows \(user.username!)")
-                                } else {
-                                    self.isFollowing[user.objectId!] = false
-                                }
-                                
-                                if self.isFollowing.count == self.usernames.count {
-                                   self.tableView.reloadData()
-                                }
-                                
-                            }
-                            
-                        })
-                        } // End if user.objectId != PFUser.current()....
-                    }
-                }
-            }
-            
-        })
+        //"Pull" to refresh
+        refresher = UIRefreshControl()
+        refresher.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refresher.addTarget(self, action: "refresh", for: UIControlEvents.valueChanged)
+        tableView.addSubview(refresher)
+
         
     }
 
@@ -121,8 +73,6 @@ class UserTableViewController: UITableViewController {
 
         // Configure the cell...
         cell.textLabel?.text = usernames[indexPath.row]
-        print("cell for row at running. UserID =", userIDs[indexPath.row])
-        
         if isFollowing[userIDs[indexPath.row]]! {
             cell.accessoryType = UITableViewCellAccessoryType.checkmark
         }
@@ -137,14 +87,14 @@ class UserTableViewController: UITableViewController {
         
         
         
-        //if following new user, add checkmark & save to "Followers" in Parse
+        //if following new user, add checkmark & write to "Followers" in Parse
         if !isFollowing[userIDs[indexPath.row]]! {
             cell?.accessoryType = UITableViewCellAccessoryType.checkmark
             isFollowing[userIDs[indexPath.row]] = true
             let followersDB = PFObject(className: "Followers")
             followersDB["follower"] = PFUser.current()?.objectId
             followersDB["following"] = userIDs[indexPath.row]
-            print("saving new follower \(userIDs[indexPath.row])")
+            print("saving new follower \(usernames[indexPath.row])")
             followersDB.saveInBackground()
             
         } else {
@@ -167,10 +117,69 @@ class UserTableViewController: UITableViewController {
             })
             
             
-            //remove this row from Parse Followers
-            
         }
 
+    }
+    
+    func refresh(){
+        let query = PFUser.query()  //get all data rows
+        
+        query?.findObjectsInBackground(block: { (objects, error) in
+            print("findObjectsInBackround returned")
+            
+            if error != nil {
+                
+                print("Error getting users", error)
+                
+            } else if let users = objects {
+                
+                self.usernames.removeAll()
+                self.userIDs.removeAll()
+                self.isFollowing.removeAll()
+                print("Arrays start empty")
+                
+                //build array of all users stored in Parse
+                for object in users {
+                    
+                    if let user = object as? PFUser {
+                        if user.objectId != PFUser.current()?.objectId {  //No list curr user
+                            
+                            let usernameArr = user.username!.components(separatedBy: "@")
+                            
+                            self.usernames.append(usernameArr[0])
+                            self.userIDs.append(user.objectId!)
+                            print("Added \(usernameArr[0]) to array")
+                            
+                            
+                            //Pre-identify if logged in users is following any listed users
+                            let query = PFQuery(className: "Followers")
+                            query.whereKey("follower", equalTo: PFUser.current()?.objectId!)
+                            query.whereKey("following", equalTo: user.objectId!)
+                            
+                            query.findObjectsInBackground(block: { (objects, error) in
+                                
+                                if let objects = objects {
+                                    if objects.count > 0 {
+                                        self.isFollowing[user.objectId!] = true
+                                        print("current user follows \(user.username!)")
+                                    } else {
+                                        self.isFollowing[user.objectId!] = false
+                                    }
+                                    
+                                    if self.isFollowing.count == self.usernames.count {
+                                        self.tableView.reloadData()
+                                        self.refresher.endRefreshing()
+                                    }
+                                    
+                                }
+                                
+                            })
+                        } // End if user.objectId != PFUser.current()....
+                    }
+                }
+            }
+            
+        })
     }
     
 
