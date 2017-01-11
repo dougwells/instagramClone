@@ -182,30 +182,40 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gSp-pj-EJP">
-                                <rect key="frame" x="90" y="334" width="194" height="30"/>
+                                <rect key="frame" x="90" y="404" width="194" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
                                 <state key="normal" title="Choose an Image"/>
+                                <connections>
+                                    <action selector="chooseAnImage:" destination="NU4-lm-EKP" eventType="touchUpInside" id="qE4-4f-Wqt"/>
+                                </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Add image description" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ujb-C5-iIQ">
-                                <rect key="frame" x="16" y="382" width="343" height="30"/>
+                                <rect key="frame" x="16" y="442" width="343" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="96r-2C-h8Q">
-                                <rect key="frame" x="107" y="436" width="161" height="55"/>
+                                <rect key="frame" x="107" y="498" width="161" height="55"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.29041177034378052" green="0.59772050380706787" blue="0.98575729131698608" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                 <state key="normal" title="Post Image">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="postImage:" destination="NU4-lm-EKP" eventType="touchUpInside" id="XVB-Zs-Q5t"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <connections>
+                        <outlet property="imageToPost" destination="jeP-63-2iV" id="KK2-y2-G9m"/>
+                        <outlet property="messageTextField" destination="ujb-C5-iIQ" id="8vZ-f0-vq0"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="het-nT-C0M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
