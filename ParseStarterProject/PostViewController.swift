@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 class PostViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
@@ -34,8 +35,27 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
     @IBOutlet weak var messageTextField: UITextField!
     
     @IBAction func postImage(_ sender: Any) {
+        let post = PFObject(className: "Posts")
+        post["message"] = messageTextField.text
+        post["userid"] = PFUser.current()?.objectId
+        
+        let imageData = UIImageJPEGRepresentation(imageToPost.image!, 0.5)
+        let imageFile = PFFile(name: "image.jpeg", data: imageData!)
+        post["imageFile"] = imageFile
+        
+        post.saveInBackground { (success, error) in
+            if error != nil {
+                self.createAlert(title: "Error Saving Image", message: "Please try again later.  Thanks")
+            } else {
+                self.createAlert(title: "Successfully Saved Image", message: "Make sure to share this with your friends")
+                self.messageTextField.text = ""
+                self.imageToPost.image = UIImage(named: "placeHolder.jpg")
+            }
+        }
     }
     
+    
+    //Let user choose photo from photo library (existing method)
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         //function passes us object "info" on user selected image
@@ -51,6 +71,19 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
         //close this function
         self.dismiss(animated: true, completion: nil)
     }
+    
+    func createAlert(title: String, message: String ) {
+        //creat alert
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        
+        //add button to alert
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
+            self.dismiss(animated: true, completion: nil)
+        }))
+        
+        //present alert
+        self.present(alert, animated: true, completion: nil)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,6 +95,8 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    
     
 
     /*
