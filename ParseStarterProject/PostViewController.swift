@@ -11,6 +11,9 @@ import Parse
 
 class PostViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
+    //declare activityIndicator (needed for functions start/stop spinner)
+    var activityIndicator = UIActivityIndicatorView.init(frame: CGRect(x: 0, y: 300, width: 100, height: 100))
+    
     @IBOutlet weak var imageToPost: UIImageView!
     
     @IBAction func chooseAnImage(_ sender: Any) {
@@ -35,6 +38,7 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
     @IBOutlet weak var messageTextField: UITextField!
     
     @IBAction func postImage(_ sender: Any) {
+        self.startSpinner()
         let post = PFObject(className: "Posts")
         post["message"] = messageTextField.text
         post["userid"] = PFUser.current()?.objectId
@@ -44,6 +48,7 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
         post["imageFile"] = imageFile
         
         post.saveInBackground { (success, error) in
+            self.stopSpinner()
             if error != nil {
                 self.createAlert(title: "Error Saving Image", message: "Please try again later.  Thanks")
             } else {
@@ -78,11 +83,28 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
         
         //add button to alert
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
-            self.dismiss(animated: true, completion: nil)
+            alert.dismiss(animated: true, completion: nil)
         }))
         
         //present alert
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    func startSpinner(){
+        
+        
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents()
+        
+    }
+    
+    func stopSpinner(){
+        activityIndicator.stopAnimating()
+        UIApplication.shared.endIgnoringInteractionEvents()
     }
 
     override func viewDidLoad() {
