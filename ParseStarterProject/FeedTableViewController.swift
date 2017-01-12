@@ -9,6 +9,23 @@
 import UIKit
 
 class FeedTableViewController: UITableViewController {
+    
+/* Steps to get feed of members the logged in user is following
+     1) pass in userIDs array from ViewController
+            userIDs = ["1234"]
+     
+     2) perform query on Parse each query id
+     
+     3) append results
+        - ideally to an object w/properties
+        - could keep simple and merely have arrays for each
+            a) userID
+            b) username
+            c) array of images
+            d) string array of messages
+     
+*/
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,10 +56,13 @@ class FeedTableViewController: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! FeedTableViewCell
 
         // Configure the cell...
-        cell.textLabel?.text = "Test"
+        cell.postedImage.image = UIImage(named: "peopleIcon.png")
+        cell.usernameLabel.text = "Doug"
+        cell.messageLabel.text = "Nice photo ..."
+
 
         return cell
     }
