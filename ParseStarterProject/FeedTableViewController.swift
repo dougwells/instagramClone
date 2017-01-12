@@ -73,7 +73,10 @@ class FeedTableViewController: UITableViewController {
                                             //now have posts from one followed friend
                                             self.messages.append(post["message"] as! String)
                                             self.imageFiles.append(post["imageFile"] as! PFFile)
-                                            self.usernames.append(self.users[post["userid"] as! String] as! String!)
+                                            //self.usernames.append(self.users[post["userid"] as! String]!)
+                                            print("messages", self.messages)
+                                            print("usernames", self.usernames)
+                                            self.tableView.reloadData()
                                         }
                                     }
                                 }
@@ -111,7 +114,7 @@ class FeedTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 4
+        return imageFiles.count
     }
 
     
@@ -119,9 +122,17 @@ class FeedTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! FeedTableViewCell
 
         // Configure the cell...
-        cell.postedImage.image = UIImage(named: "peopleIcon.png")
-        cell.usernameLabel.text = "Doug"
-        cell.messageLabel.text = "Nice photo ..."
+        imageFiles[indexPath.row].getDataInBackground { (data, error) in
+            
+            if let imageData = data {
+            if let downloadedImage = UIImage(data: imageData) {
+                    cell.postedImage.image = downloadedImage
+            }
+            }
+        }
+        
+        cell.usernameLabel.text = "Linda"  //usernames[indexPath.row]
+        cell.messageLabel.text = messages[indexPath.row]
 
 
         return cell
