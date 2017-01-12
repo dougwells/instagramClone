@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 class FeedTableViewController: UITableViewController {
     
@@ -26,9 +27,68 @@ class FeedTableViewController: UITableViewController {
      
 */
     
+    var users = [String: String]()
+    var messages = [""]
+    var usernames = [String]()
+    var imageFiles = [PFFile]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let query = PFQuery()
+        query.findObjectsInBackground(block: { (objects, error) in
+            
+            if let users = objects {    //note: DIFFERENT "users".  Scope (since used let)
+                
+                print("--- user query returned ---")
+                for object in users {
+                    
+                    if let user = object as? PFUser {
+                        
+                        self.users[user.objectId!] = user.username!  //update dict of usernames
+                        
+                    }
+                }
+            }
+            
+            let getFollowedUsersQuery = PFQuery(className: "Followers")
+            getFollowedUsersQuery.whereKey("follower", equalTo: (PFUser.current()?.objectId!)!)
+            getFollowedUsersQuery.findObjectsInBackground(block: { (objects, error) in
+                
+                if let followers = objects {
+                   
+                    for object in followers {
+                        
+                        if let follower = object as? PFObject {
+                            
+                            let followedUser = follower["following"] as! String
+                            
+                            let query = PFQuery(className: "Posts")
+                            query.whereKey("userid", equalTo: followedUser)
+                            query.findObjectsInBackground(block: { (objects, error) in
+                                
+                                if let posts = objects {
+                                    for object in posts {
+                                        if let post = object as? PFObject {
+                                            //now have posts from one followed friend
+                                            self.messages.append(post["message"] as! String)
+                                            self.imageFiles.append(post["imageFile"] as! PFFile)
+                                            self.usernames.append(self.users[post["userid"] as! String] as! String!)
+                                        }
+                                    }
+                                }
+                                
+                            })
+                            
+                        }
+                        
+                    }
+                    
+                }
+                
+            })
+            
+        })
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
