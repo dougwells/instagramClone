@@ -28,24 +28,33 @@ class FeedTableViewController: UITableViewController {
 */
     
     var users = [String: String]()
-    var messages = [""]
+    var messages = [String]()
     var usernames = [String]()
     var imageFiles = [PFFile]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let query = PFQuery()
-        query.findObjectsInBackground(block: { (objects, error) in
+        let query = PFUser.query()
+        query?.findObjectsInBackground { (objects, error) in
+            self.users.removeAll()
+            self.messages.removeAll()
+            self.usernames.removeAll()
+            self.imageFiles.removeAll()
+            print("Feed arrays start empty")
+        
             
             if let users = objects {    //note: DIFFERENT "users".  Scope (since used let)
                 
                 print("--- user query returned ---")
                 for object in users {
+                    print("---for object in users returned ---")
                     
                     if let user = object as? PFUser {
+                        print("username =", user.username)
                         
-                        self.users[user.objectId!] = user.username!  //update dict of usernames
+                        self.users[user.objectId! as String] = user.username!  //update dict of usernames
+                        print("add to dict of usernames,", self.users[user.objectId!])
                         
                     }
                 }
@@ -56,6 +65,7 @@ class FeedTableViewController: UITableViewController {
             getFollowedUsersQuery.findObjectsInBackground(block: { (objects, error) in
                 
                 if let followers = objects {
+                    print("--- followers returned ---")
                    
                     for object in followers {
                         
@@ -68,12 +78,16 @@ class FeedTableViewController: UITableViewController {
                             query.findObjectsInBackground(block: { (objects, error) in
                                 
                                 if let posts = objects {
+                                    print("--- posts returned ---")
                                     for object in posts {
                                         if let post = object as? PFObject {
+                                            
                                             //now have posts from one followed friend
                                             self.messages.append(post["message"] as! String)
                                             self.imageFiles.append(post["imageFile"] as! PFFile)
-                                            //self.usernames.append(self.users[post["userid"] as! String]!)
+                                            print("userid =", post["userid"])
+                                            //self.usernames.append("Linda")
+                                            self.usernames.append(self.users[post["userid"] as! String]!)
                                             print("messages", self.messages)
                                             print("usernames", self.usernames)
                                             self.tableView.reloadData()
@@ -91,7 +105,7 @@ class FeedTableViewController: UITableViewController {
                 
             })
             
-        })
+        }
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -131,7 +145,7 @@ class FeedTableViewController: UITableViewController {
             }
         }
         
-        cell.usernameLabel.text = "Linda"  //usernames[indexPath.row]
+        cell.usernameLabel.text = usernames[indexPath.row]
         cell.messageLabel.text = messages[indexPath.row]
 
 
