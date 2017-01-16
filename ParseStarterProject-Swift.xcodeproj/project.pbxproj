@@ -13,6 +13,7 @@
 		704B4AE01E2687C1000CF100 /* placeHolder.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 704B4ADF1E2687C1000CF100 /* placeHolder.jpg */; };
 		704B4AE41E26FCFA000CF100 /* FeedTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704B4AE31E26FCFA000CF100 /* FeedTableViewController.swift */; };
 		704B4AE61E27021F000CF100 /* FeedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704B4AE51E27021F000CF100 /* FeedTableViewCell.swift */; };
+		70A7C1071E2D18B60068B536 /* surfSunset.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 70A7C1061E2D18B60068B536 /* surfSunset.jpg */; };
 		814C3ACA1B69877600E307BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 814C3AC61B69877600E307BB /* Main.storyboard */; };
 		814C3ACB1B69877600E307BB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 814C3AC81B69877600E307BB /* Images.xcassets */; };
 		81BA814B1A49DA1800E65899 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81BA814A1A49DA1800E65899 /* AppDelegate.swift */; };
@@ -32,6 +33,7 @@
 		704B4ADF1E2687C1000CF100 /* placeHolder.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = placeHolder.jpg; sourceTree = "<group>"; };
 		704B4AE31E26FCFA000CF100 /* FeedTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTableViewController.swift; sourceTree = "<group>"; };
 		704B4AE51E27021F000CF100 /* FeedTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedTableViewCell.swift; sourceTree = "<group>"; };
+		70A7C1061E2D18B60068B536 /* surfSunset.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = surfSunset.jpg; sourceTree = "<group>"; };
 		814C3AC71B69877600E307BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		814C3AC81B69877600E307BB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		814C3AC91B69877600E307BB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 			children = (
 				814C3AC81B69877600E307BB /* Images.xcassets */,
 				814C3AC91B69877600E307BB /* Info.plist */,
+				70A7C1061E2D18B60068B536 /* surfSunset.jpg */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -194,6 +197,7 @@
 				704B4AE01E2687C1000CF100 /* placeHolder.jpg in Resources */,
 				814C3ACA1B69877600E307BB /* Main.storyboard in Resources */,
 				814C3ACB1B69877600E307BB /* Images.xcassets in Resources */,
+				70A7C1071E2D18B60068B536 /* surfSunset.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
