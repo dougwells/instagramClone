@@ -99,9 +99,7 @@ class ViewController: UIViewController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         
         //add button to alert
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (action) in
-            self.dismiss(animated: true, completion: nil)
-        }))
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         
         //present alert
         self.present(alert, animated: true, completion: nil)

@@ -11,8 +11,7 @@ import Parse
 
 class PostViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     
-    //declare activityIndicator (needed for functions start/stop spinner)
-    var activityIndicator = UIActivityIndicatorView.init(frame: CGRect(x: 0, y: 300, width: 100, height: 100))
+
     
     @IBOutlet weak var imageToPost: UIImageView!
     
@@ -37,11 +36,15 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
     
     @IBOutlet weak var messageTextField: UITextField!
     
+    //declare activityIndicator (needed for functions start/stop spinner)
+    var activityIndicator = UIActivityIndicatorView.init(frame: CGRect(x: 0, y: 300, width: 100, height: 100))
+    
     @IBAction func postImage(_ sender: Any) {
         self.startSpinner()
         let post = PFObject(className: "Posts")
         post["message"] = messageTextField.text
         post["userid"] = PFUser.current()?.objectId
+
         
         let imageData = UIImageJPEGRepresentation(imageToPost.image!, 0.5)
         let imageFile = PFFile(name: "image.jpeg", data: imageData!)

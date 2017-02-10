@@ -85,6 +85,7 @@ class FeedTableViewController: UITableViewController {
                                             //now have posts from one followed friend
                                             self.messages.append(post["message"] as! String)
                                             self.imageFiles.append(post["imageFile"] as! PFFile)
+                                            
                                             print("userid =", post["userid"])
                                             //self.usernames.append("Linda")
                                             self.usernames.append(self.users[post["userid"] as! String]!)
